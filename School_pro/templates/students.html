@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Manage Students{% endblock %}
+
+{% block content %}
+<h3 class="fw-bold mb-4">Manage Students</h3>
+
+<div class="row">
+    <!-- Data Entry Form (Left Side) -->
+    <div class="col-md-4 mb-4">
+        <div class="card p-4">
+            <h5 class="mb-3">Register Student</h5>
+            <form action="/submit-student" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">First Name</label>
+                    <input type="text" name="first_name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" name="last_name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Roll Number</label>
+                    <input type="text" name="roll_number" class="form-control" placeholder="e.g. FA24-001" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Assign Class</label>
+                    <select name="class_id" class="form-select" required>
+                        <option value="">Select Class...</option>
+                        {% for cls in classes %}
+                        <option value="{{ cls.id }}">{{ cls.class_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Register Student</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Students List Table (Right Side) -->
+    <div class="col-md-8">
+        <div class="table-responsive">
+            <table class="table table-hover mt-2">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Name</th>
+                        <th>Class ID</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td><strong>{{ student.roll_number }}</strong></td>
+                        <td>{{ student.first_name }} {{ student.last_name }}</td>
+                        <td>{{ student.class_id }}</td>
+                        <td><span class="badge bg-success">{{ student.status or 'Active' }}</span></td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="text-center text-muted">No students registered yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Manage Expenses{% endblock %}
+
+{% block content %}
+<h3 class="fw-bold mb-4">School Expenses</h3>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card p-4">
+            <h5 class="mb-3">Record Expense</h5>
+            <form action="/submit-expense" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Category ID</label>
+                    <input type="number" name="category_id" class="form-control" placeholder="e.g., 1" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <input type="text" name="description" class="form-control" placeholder="e.g., Electricity Bill" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Amount (Rs)</label>
+                    <input type="number" name="amount" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-danger w-100">Record Expense</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="table-responsive">
+            <table class="table table-hover mt-2">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Description</th>
+                        <th>Category ID</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for exp in expenses %}
+                    <tr>
+                        <td>{{ exp.id }}</td>
+                        <td>{{ exp.description }}</td>
+                        <td>{{ exp.category_id }}</td>
+                        <td class="text-danger fw-bold">- Rs. {{ exp.amount }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="text-center text-muted">No expenses recorded yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

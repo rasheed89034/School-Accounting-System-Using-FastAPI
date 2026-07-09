@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - School ERP{% endblock %}
+
+{% block content %}
+<h3 class="fw-bold mb-4">Dashboard Overview</h3>
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="card p-3 text-center border-top border-primary border-4">
+            <h6 class="text-muted text-uppercase">Total Students</h6>
+            <h2 class="mb-0 fw-bold">{{ total_students | default('0') }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 text-center border-top border-success border-4">
+            <h6 class="text-muted text-uppercase">Fees Collected</h6>
+            <h2 class="mb-0 fw-bold">Rs. {{ fees_collected | default('0') }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 text-center border-top border-danger border-4">
+            <h6 class="text-muted text-uppercase">Total Expenses</h6>
+            <h2 class="mb-0 fw-bold">Rs. {{ total_expenses | default('0') }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 text-center border-top border-info border-4">
+            <h6 class="text-muted text-uppercase">Total Staff</h6>
+            <h2 class="mb-0 fw-bold">{{ total_staff | default('0') }}</h2>
+        </div>
+    </div>
+</div>
+{% endblock %}

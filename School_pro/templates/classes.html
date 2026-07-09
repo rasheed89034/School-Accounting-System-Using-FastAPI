@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Manage Classes{% endblock %}
+
+{% block content %}
+<h3 class="fw-bold mb-4">Manage Classes</h3>
+
+<div class="row">
+    <!-- Add Class Form -->
+    <div class="col-md-4 mb-4">
+        <div class="card p-4">
+            <h5 class="mb-3">Add New Class</h5>
+            <form action="/submit-class" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Class Name</label>
+                    <input type="text" name="class_name" class="form-control" placeholder="e.g., Grade 10" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Monthly Tuition Fee (Rs)</label>
+                    <input type="number" name="monthly_tuition_fee" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Save Class</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Classes List Table -->
+    <div class="col-md-8">
+        <div class="table-responsive">
+            <table class="table table-hover mt-2">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Class Name</th>
+                        <th>Monthly Fee</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cls in classes %}
+                    <tr>
+                        <td>{{ cls.id }}</td>
+                        <td><span class="badge bg-info text-dark">{{ cls.class_name }}</span></td>
+                        <td>Rs. {{ cls.monthly_tuition_fee }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="text-center text-muted">No classes found. Add a class first.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
