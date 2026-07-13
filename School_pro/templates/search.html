@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Search Portal{% endblock %}
+
+{% block content %}
+<h3 class="fw-bold mb-4">Record Search Portal</h3>
+
+<!-- Error Message -->
+{% if error %}
+<div class="alert alert-danger shadow-sm border-0">{{ error }}</div>
+{% endif %}
+
+<div class="row">
+    <!-- 1. Student Search Section -->
+    <div class="col-md-6 mb-4">
+        <div class="card p-4 shadow-sm border-top border-primary border-4">
+            <h5 class="mb-3 text-primary"><i class="bi bi-person-badge"></i> Search Student</h5>
+            <form action="/search-student" method="POST">
+                <div class="mb-3">
+                    <label class="form-label text-muted small">Enter Student Roll Number</label>
+                    <div class="input-group">
+                        <input type="text" name="roll_number" class="form-control" placeholder="e.g., S-101" required>
+                        <button type="submit" class="btn btn-primary px-4">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Teacher/Staff Search Section -->
+    <div class="col-md-6 mb-4">
+        <div class="card p-4 shadow-sm border-top border-success border-4">
+            <h5 class="mb-3 text-success"><i class="bi bi-person-workspace"></i> Search Teacher/Staff</h5>
+            <form action="/search-employee" method="POST">
+                <div class="mb-3">
+                    <label class="form-label text-muted small">Enter Employee ID</label>
+                    <div class="input-group">
+                        <input type="number" name="emp_id" class="form-control" placeholder="e.g., 1" required>
+                        <button type="submit" class="btn btn-success px-4">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ================= RESULTS SECTION ================= -->
+
+<!-- Student Result Details -->
+{% if student_result %}
+<div class="card p-4 shadow-sm mt-2 border-0 bg-light">
+    <h5 class="text-primary border-bottom border-primary pb-2 mb-4">Student Profile</h5>
+    <div class="row">
+        <div class="col-md-5">
+            <p class="mb-2"><strong>Name:</strong> {{ student_result.info.first_name }} {{ student_result.info.last_name }}</p>
+            <p class="mb-2"><strong>Roll Number:</strong> <span class="badge bg-primary">{{ student_result.info.roll_number }}</span></p>
+            <p class="mb-2"><strong>Joining Date:</strong> {{ student_result.info.enrollment_date }}</p>
+        </div>
+        <div class="col-md-7">
+            <h6 class="fw-bold text-secondary">Fee History & Dues:</h6>
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered bg-white">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Month</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inv in student_result.invoices %}
+                        <tr>
+                            <td>{{ inv.month }}</td>
+                            <td>Rs. {{ inv.total_amount }}</td>
+                            <td>
+                                {% if inv.status == 'Paid' %}
+                                    <span class="badge bg-success">Paid</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Unpaid</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="3" class="text-muted text-center">No fee records generated yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Teacher Result Details -->
+{% if employee_result %}
+<div class="card p-4 shadow-sm mt-2 border-0 bg-light">
+    <h5 class="text-success border-bottom border-success pb-2 mb-4">Teacher / Staff Profile</h5>
+    <div class="row">
+        <div class="col-md-6">
+            <p class="mb-2"><strong>Employee ID:</strong> <span class="badge bg-success">#{{ employee_result.id }}</span></p>
+            <p class="mb-2"><strong>Name:</strong> {{ employee_result.name }}</p>
+            <p class="mb-2"><strong>Designation:</strong> {{ employee_result.designation }}</p>
+        </div>
+        <div class="col-md-6">
+            <p class="mb-2"><strong>Contact Number:</strong> {{ employee_result.contact_number }}</p>
+            <p class="mb-2"><strong>Basic Salary:</strong> <span class="fw-bold text-success">Rs. {{ employee_result.basic_salary }}</span></p>
+            <p class="mb-2"><strong>Joining Date:</strong> {{ employee_result.joining_date }}</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
