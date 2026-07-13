@@ -99,3 +99,34 @@ def submit_expense(category_id: int = Form(...), description: str = Form(...), a
     db.add(model.Expense(category_id=category_id, description=description, amount=amount))
     db.commit()
     return RedirectResponse(url="/expenses-page", status_code=303)
+
+# --- Search Portal Routes ---
+@app.get("/search-page")
+def search_page(request: Request):
+    return templates.TemplateResponse("search.html", {
+        "request": request, 
+        "student_result": None, 
+        "employee_result": None, 
+        "error": None
+    })
+
+@app.post("/search-student")
+def search_student(request: Request, roll_number: str = Form(...), db: Session = Depends(get_db)):
+    # Student aur uski fees dhundna
+    student = db.query(model.Student).filter(model.Student.roll_number == roll_number).first()
+    if not student:
+        return templates.TemplateResponse("search.html", {"request": request, "student_result": None, "employee_result": None, "error": "Student not found!"})
+    
+    invoices = db.query(model.FeeInvoice).filter(model.FeeInvoice.student_id == student.id).all()
+    
+    student_data = {"info": student, "invoices": invoices}
+    return templates.TemplateResponse("search.html", {"request": request, "student_result": student_data, "employee_result": None, "error": None})
+
+@app.post("/search-employee")
+def search_employee(request: Request, emp_id: int = Form(...), db: Session = Depends(get_db)):
+    # Teacher/Employee ko ID se dhundna
+    employee = db.query(model.Employee).filter(model.Employee.id == emp_id).first()
+    if not employee:
+        return templates.TemplateResponse("search.html", {"request": request, "student_result": None, "employee_result": None, "error": "Teacher/Staff not found!"})
+    
+    return templates.TemplateResponse("search.html", {"request": request, "student_result": None, "employee_result": employee, "error": None})
